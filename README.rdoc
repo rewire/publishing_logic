@@ -1,6 +1,15 @@
 = publishing_logic
 
 Publishing logic for ActiveRecord models
+* Generates a migration with fields required for publishing
+  logic. Fields are:
+  * publishing_enabled:boolean
+  * publish_from_datetime:datetime
+  * publish_until_datetime:datetime
+* Defines logic on models that include PublishingLogic::ModelLogic
+  * published named scope
+  * published? method
+  * ordering by publish_from_date
 
 == Note on Patches/Pull Requests
  
