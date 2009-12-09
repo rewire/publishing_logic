@@ -1,0 +1,92 @@
+--- !ruby/object:Gem::Specification 
+name: publishing_logic
+version: !ruby/object:Gem::Version 
+  version: 0.0.0
+platform: ruby
+authors: 
+- Unboxed Consulting
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-12-09 00:00:00 +00:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: rspec
+  type: :development
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 1.2.9
+    version: 
+- !ruby/object:Gem::Dependency 
+  name: cucumber
+  type: :development
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: "0"
+    version: 
+description: Publishing logic for ActiveRecord models
+email: enquiries@unboxedconsulting.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- LICENSE
+- README.rdoc
+files: 
+- .document
+- .gitignore
+- LICENSE
+- README.rdoc
+- Rakefile
+- VERSION
+- features/publishing_logic.feature
+- features/step_definitions/publishing_logic_steps.rb
+- features/support/env.rb
+- lib/model_logic.rb
+- lib/publishing_logic.rb
+- rails_generators/publishing_logic_fields/publishing_logic_fields_generator.rb
+- spec/lib/model_logic_spec.rb
+- spec/publishing_logic_spec.rb
+- spec/spec.opts
+- spec/spec_helper.rb
+has_rdoc: true
+homepage: http://github.com/tomtt/publishing_logic
+licenses: []
+
+post_install_message: 
+rdoc_options: 
+- --charset=UTF-8
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+requirements: []
+
+rubyforge_project: 
+rubygems_version: 1.3.5
+signing_key: 
+specification_version: 3
+summary: Publishing logic for ActiveRecord models
+test_files: 
+- spec/lib/model_logic_spec.rb
+- spec/publishing_logic_spec.rb
+- spec/spec_helper.rb
