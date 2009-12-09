@@ -1,6 +1,6 @@
 = publishing_logic
 
-Description goes here.
+Publishing logic for ActiveRecord models
 
 == Note on Patches/Pull Requests
  
