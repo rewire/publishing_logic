@@ -1,0 +1,13 @@
+class <%= migration_name %> < ActiveRecord::Migration
+  def self.up
+    add_column :<%= class_name.underscore.camelize.tableize %>, :publishing_enabled, :boolean
+    add_column :<%= class_name.underscore.camelize.tableize %>, :publish_from, :datetime
+    add_column :<%= class_name.underscore.camelize.tableize %>, :publish_until, :datetime
+  end
+
+  def self.down
+    remove_column :<%= class_name.underscore.camelize.tableize %>, :publishing_enabled
+    remove_column :<%= class_name.underscore.camelize.tableize %>, :publish_from
+    remove_column :<%= class_name.underscore.camelize.tableize %>, :publish_until
+  end
+end
