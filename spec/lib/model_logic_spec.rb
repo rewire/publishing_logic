@@ -9,6 +9,12 @@ Factory.define :fun_item do |c|
 end
 
 describe PublishingLogic::ModelLogic do
+  def create_objects_with_different_published_at_dates
+    @object2 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 2.days.ago)
+    @object1 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 1.days.ago)
+    @object3 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 3.days.ago)
+  end
+
   describe "published?" do
     describe "with publishing enabled" do
       it "should be published by default" do
@@ -90,20 +96,69 @@ describe PublishingLogic::ModelLogic do
     end
 
     describe "newest" do
+      before do
+        create_objects_with_different_published_at_dates
+      end
+
       it "should be the most recently published object" do
-        object2 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 2.days.ago)
-        object1 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 1.days.ago)
-        object3 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 3.days.ago)
-        FunItem.published.newest.should == object1
+        FunItem.published.newest.should == @object1
       end
     end
     describe "oldest" do
       it "should be the object published the longest ago" do
-        object2 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 2.days.ago)
-        object1 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 1.days.ago)
-        object3 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 3.days.ago)
-        FunItem.published.oldest.should == object3
+        FunItem.published.oldest.should == @object3
       end
+    end
+  end
+
+  describe "ordering by published_at" do
+    describe "by date oldest first" do
+      it "should return the items, oldest first" do
+        create_objects_with_different_published_at_dates
+        FunItem.by_date_oldest_first.map(&:id).should == [@object3,
+                                                          @object2,
+                                                          @object1].map(&:id)
+      end
+
+      it "should order by created_at date if published_ats are equal" do
+        create_objects_with_different_published_at_dates
+        @object2b = Factory.create(:fun_item,
+                                   :publishing_enabled => true,
+                                   :published_at => @object2.published_at,
+                                   :created_at => 3.days.ago)
+        FunItem.by_date_oldest_first.map(&:id).should == [@object3,
+                                                          @object2b,
+                                                          @object2,
+                                                          @object1].map(&:id)
+      end
+    end
+
+    describe "by date newest first" do
+      it "should return the items, oldest first" do
+        create_objects_with_different_published_at_dates
+        FunItem.by_date_newest_first.map(&:id).should == [@object1,
+                                                          @object2,
+                                                          @object3].map(&:id)
+      end
+
+      it "should order by created_at date if published_ats are equal" do
+        create_objects_with_different_published_at_dates
+        @object2b = Factory.create(:fun_item,
+                                   :publishing_enabled => true,
+                                   :published_at => @object2.published_at,
+                                   :created_at => 3.days.from_now)
+        FunItem.by_date_newest_first.map(&:id).should == [@object1,
+                                                          @object2b,
+                                                          @object2,
+                                                          @object3].map(&:id)
+      end
+    end
+
+    it "should have a newest first ordering that is the reverse of the oldest first ordering for identical objects" do
+      creation_time = 2.days.ago
+      publish_time = 1.days.ago
+      5.times { Factory.create(:fun_item, :created_at => creation_time, :published_at => publish_time) }
+      FunItem.by_date_newest_first.map(&:id).should == FunItem.by_date_oldest_first.map(&:id).reverse
     end
   end
 end
