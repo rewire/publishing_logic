@@ -161,4 +161,24 @@ describe PublishingLogic::ModelLogic do
       FunItem.by_date_newest_first.map(&:id).should == FunItem.by_date_oldest_first.map(&:id).reverse
     end
   end
+
+  describe "published in past days" do
+    it "should only include items published in the past n days" do
+      @item1 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 1.days.ago)
+      @item2 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 2.days.ago)
+      @item4 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 4.days.ago)
+      @item5 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 5.days.ago)
+      FunItem.published_in_past_days(3).map(&:id).sort.should == [@item1, @item2].map(&:id).sort
+    end
+
+    it "should not include an item just published for 0 days" do
+      @item1 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 1.second.ago)
+      FunItem.published_in_past_days(0).map(&:id).should be_empty
+    end
+
+    it "should not include unpublished items" do
+      @item = Factory.create(:fun_item, :publishing_enabled => false, :published_at => 2.days.ago)
+      FunItem.published_in_past_days(10).map(&:id).should be_empty
+    end
+  end
 end
