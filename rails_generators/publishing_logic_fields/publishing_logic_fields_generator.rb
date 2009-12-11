@@ -9,6 +9,7 @@ class PublishingLogicFieldsGenerator < Rails::Generator::NamedBase
       m.migration_template 'db/migrate/add_publishing_logic_fields.rb.erb', 'db/migrate', :assigns => {
         :migration_name => "AddPublishingLogicFieldsTo#{class_name.pluralize.gsub(/::/, '')}"
       }, :migration_file_name => "add_publishing_logic_fields_to_#{file_path.gsub(/\//, '_').pluralize}"
+      m.template 'app/views/publishing_logic_fields.html.erb', File.join('app', 'views', 'admin', plural_name, "_publishing_logic_fields.html.erb")
     end
   end
 end
