@@ -1,38 +1,32 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
+require File.expand_path(File.join(File.dirname(__FILE__), "../../../../../spec/factories"))
 require 'model_logic'
-
-class FunItem < ActiveRecord::Base
-  include PublishingLogic::ModelLogic
-end
-
-Factory.define :fun_item do |c|
-end
 
 describe PublishingLogic::ModelLogic do
   def create_objects_with_different_published_at_dates
-    @object2 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 2.days.ago)
-    @object1 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 1.days.ago)
-    @object3 = Factory.create(:fun_item, :publishing_enabled => true, :published_at => 3.days.ago)
+    @object2 = Factory.create(:programme, :publishing_enabled => true, :published_at => 2.days.ago)
+    @object1 = Factory.create(:programme, :publishing_enabled => true, :published_at => 1.days.ago)
+    @object3 = Factory.create(:programme, :publishing_enabled => true, :published_at => 3.days.ago)
   end
 
   describe "published?" do
     describe "with publishing enabled" do
       it "should be published by default" do
-        Factory.create(:fun_item,
+        Factory.create(:programme,
                        :publishing_enabled => true,
                        :published_at => nil,
                        :published_until => nil).should be_published
       end
 
       it "should not be published if the published_at datetime is in the future" do
-        Factory.create(:fun_item,
+        Factory.create(:programme,
                        :publishing_enabled => true,
                        :published_at => 5.seconds.from_now,
                        :published_until => nil).should_not be_published
       end
 
       it "should not be published if the published_until datetime is in the past" do
-        Factory.create(:fun_item,
+        Factory.create(:programme,
                        :publishing_enabled => true,
                        :published_at => nil,
                        :published_until => 5.seconds.ago).should_not be_published
@@ -40,7 +34,7 @@ describe PublishingLogic::ModelLogic do
     end
     describe "with publishing disabled" do
       it "should not be published" do
-        Factory.create(:fun_item,
+        Factory.create(:programme,
                        :publishing_enabled => false,
                        :published_at => 1.days.ago,
                        :published_until => 10.days.from_now).should_not be_published
@@ -50,13 +44,13 @@ describe PublishingLogic::ModelLogic do
 
   describe "published named scope" do
     it "should include published objects" do
-      fun_item = Factory.create(:fun_item, :publishing_enabled => true)
-      FunItem.published.should == [fun_item]
+      programme = Factory.create(:programme, :publishing_enabled => true)
+      Programme.published.should == [programme]
     end
 
     it "should not include any unpublished objects" do
-      fun_item = Factory.create(:fun_item, :publishing_enabled => false)
-      FunItem.published.should be_empty
+      Factory.create(:programme, :publishing_enabled => false)
+      Programme.published.should be_empty
     end
 
     # it "should not expose a published episode published an hour ago" do
@@ -65,26 +59,26 @@ describe PublishingLogic::ModelLogic do
     # end
 
     it "should not include objects with a published_until in the past" do
-      Factory.create(:fun_item,
+      Factory.create(:programme,
                      :publishing_enabled => true,
                      :published_until => 5.seconds.ago)
-      FunItem.published.should be_empty
+      Programme.published.should be_empty
     end
 
     it "should not include objects with a published_at in the future" do
-      Factory.create(:fun_item,
+      Factory.create(:programme,
                      :publishing_enabled => true,
                      :published_at => 5.seconds.from_now)
-      FunItem.published.should be_empty
+      Programme.published.should be_empty
     end
 
     it "should get a new Time.now for each invocation of the named scope" do
-      item = Factory.create(:fun_item,
+      item = Factory.create(:programme,
                             :publishing_enabled => true,
                             :published_until => 10.days.from_now)
       mock_now = mock('now', :utc => 20.days.from_now, :to_f => 0)
       Time.stub(:now).and_return mock_now
-      FunItem.published.should be_empty
+      Programme.published.should be_empty
     end
 
     it "should use the utc of the current time" do
@@ -92,7 +86,7 @@ describe PublishingLogic::ModelLogic do
       mock_now = mock('now')
       Time.stub(:now).and_return mock_now
       mock_now.should_receive(:utc).twice
-      FunItem.published
+      Programme.published
     end
 
     describe "newest" do
@@ -101,12 +95,12 @@ describe PublishingLogic::ModelLogic do
       end
 
       it "should be the most recently published object" do
-        FunItem.published.newest.should == @object1
+        Programme.published.newest.should == @object1
       end
     end
     describe "oldest" do
       it "should be the object published the longest ago" do
-        FunItem.published.oldest.should == @object3
+        Programme.published.oldest.should == @object3
       end
     end
   end
@@ -115,18 +109,18 @@ describe PublishingLogic::ModelLogic do
     describe "by date oldest first" do
       it "should return the items, oldest first" do
         create_objects_with_different_published_at_dates
-        FunItem.by_date_oldest_first.map(&:id).should == [@object3,
+        Programme.by_date_oldest_first.map(&:id).should == [@object3,
                                                           @object2,
                                                           @object1].map(&:id)
       end
 
       it "should order by created_at date if published_ats are equal" do
         create_objects_with_different_published_at_dates
-        @object2b = Factory.create(:fun_item,
+        @object2b = Factory.create(:programme,
                                    :publishing_enabled => true,
                                    :published_at => @object2.published_at,
                                    :created_at => 3.days.ago)
-        FunItem.by_date_oldest_first.map(&:id).should == [@object3,
+        Programme.by_date_oldest_first.map(&:id).should == [@object3,
                                                           @object2b,
                                                           @object2,
                                                           @object1].map(&:id)
@@ -136,18 +130,18 @@ describe PublishingLogic::ModelLogic do
     describe "by date newest first" do
       it "should return the items, oldest first" do
         create_objects_with_different_published_at_dates
-        FunItem.by_date_newest_first.map(&:id).should == [@object1,
+        Programme.by_date_newest_first.map(&:id).should == [@object1,
                                                           @object2,
                                                           @object3].map(&:id)
       end
 
       it "should order by created_at date if published_ats are equal" do
         create_objects_with_different_published_at_dates
-        @object2b = Factory.create(:fun_item,
+        @object2b = Factory.create(:programme,
                                    :publishing_enabled => true,
                                    :published_at => @object2.published_at,
                                    :created_at => 3.days.from_now)
-        FunItem.by_date_newest_first.map(&:id).should == [@object1,
+        Programme.by_date_newest_first.map(&:id).should == [@object1,
                                                           @object2b,
                                                           @object2,
                                                           @object3].map(&:id)
@@ -157,8 +151,8 @@ describe PublishingLogic::ModelLogic do
     it "should have a newest first ordering that is the reverse of the oldest first ordering for identical objects" do
       creation_time = 2.days.ago
       publish_time = 1.days.ago
-      5.times { Factory.create(:fun_item, :created_at => creation_time, :published_at => publish_time) }
-      FunItem.by_date_newest_first.map(&:id).should == FunItem.by_date_oldest_first.map(&:id).reverse
+      5.times { Factory.create(:programme, :created_at => creation_time, :published_at => publish_time) }
+      Programme.by_date_newest_first.map(&:id).should == Programme.by_date_oldest_first.map(&:id).reverse
     end
   end
 end

@@ -1,10 +1,5 @@
 module PublishingLogic
   module ModelLogic
-    PUBLISHED_CONDITIONS = <<EOT
-publishing_enabled = true AND
-(published_until is null or published_until > ?) AND
-(published_at is null or published_at < ?)
-EOT
 
     def published?
       return false if published_at && Time.now < published_at
@@ -15,7 +10,12 @@ EOT
     def self.included(base)
       base.extend(ClassMethods)
       base.instance_eval do
-        named_scope :published, lambda {{ :conditions => [PUBLISHED_CONDITIONS, Time.now.utc, Time.now.utc] }} do
+        named_scope :published, lambda {{ :conditions => ["#{base.table_name}.publishing_enabled = true AND \
+                                          (#{base.table_name}.published_until is null or #{base.table_name}.published_until > ?) AND \
+                                          (#{base.table_name}.published_at is null or #{base.table_name}.published_at < ?)",
+                                          Time.now.utc, Time.now.utc] }} do
+
+          # TODO Not using table name with the following methods so in danger of getting ambiguous column names
           def newest
             find(:first, :order => "published_at DESC")
           end
@@ -29,8 +29,8 @@ EOT
         # identical as well, then order by id. This is done to ensure there is a unique
         # ordering of objects, ordering by newest and oldest should result in arrays that are
         # the inverse of the other.
-        named_scope :by_date_oldest_first, :order => 'published_at ASC, created_at ASC, id ASC'
-        named_scope :by_date_newest_first, :order => 'published_at DESC, created_at DESC, id DESC'
+        named_scope :by_date_oldest_first, :order => "#{base.table_name}.published_at ASC, #{base.table_name}.created_at ASC, #{base.table_name}.id ASC"
+        named_scope :by_date_newest_first, :order => "#{base.table_name}.published_at DESC, #{base.table_name}.created_at DESC, #{base.table_name}.id DESC"
       end
     end
 
