@@ -8,7 +8,7 @@ begin
     gem.summary = %Q{Publishing logic for ActiveRecord models}
     gem.description = %Q{Publishing logic for ActiveRecord models}
     gem.email = "enquiries@unboxedconsulting.com"
-    gem.homepage = "http://github.com/tomtt/publishing_logic"
+    gem.homepage = "http://github.com/unboxed/publishing_logic"
     gem.authors = ["Unboxed Consulting"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     gem.add_development_dependency "cucumber", ">= 0"
