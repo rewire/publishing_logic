@@ -11,6 +11,8 @@ Publishing logic for ActiveRecord models
   * published? method
   * ordering by publish_from_date
 
+The source for this gem can be found on http://github.com/unboxed/publishing_logic
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
@@ -24,4 +26,4 @@ Publishing logic for ActiveRecord models
 
 == Copyright
 
-Copyright (c) 2009 Unboxed Consulting. See LICENSE for details.
+Copyright (c) 2009 Unboxed Consulting and Channel 5 Broadcasting Ltd. See LICENSE for details.
