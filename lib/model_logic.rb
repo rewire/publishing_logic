@@ -2,20 +2,21 @@ module PublishingLogic
   module ModelLogic
 
     def self.included(base)
-      if base.column_names.include?('published_until')
-        base.class_eval do
-          include WithPublishedUntilField
-          
-          # If objects have identical published_at values, order by created_at. If these are
-          # identical as well, then order by id. This is done to ensure there is a unique
-          # ordering of objects, ordering by newest and oldest should result in arrays that are
-          # the inverse of the other.
-          named_scope :by_date_oldest_first, :order => "#{base.table_name}.published_at ASC, #{base.table_name}.created_at ASC, #{base.table_name}.id ASC"
-          named_scope :by_date_newest_first, :order => "#{base.table_name}.published_at DESC, #{base.table_name}.created_at DESC, #{base.table_name}.id DESC"
-        end
-      else
-        base.class_eval { include WithoutPublishedUntilField }
-      end
+      module_to_include = if base.column_names.include?('published_until')
+                            WithPublishedUntilField
+                          else
+                            WithoutPublishedUntilField
+                          end
+      base.class_eval do
+        # If objects have identical published_at values, order by created_at. If these are
+        # identical as well, then order by id. This is done to ensure there is a unique
+        # ordering of objects, ordering by newest and oldest should result in arrays that are
+        # the inverse of the other.
+        named_scope :by_date_oldest_first, :order => "#{base.table_name}.published_at ASC, #{base.table_name}.created_at ASC, #{base.table_name}.id ASC"
+        named_scope :by_date_newest_first, :order => "#{base.table_name}.published_at DESC, #{base.table_name}.created_at DESC, #{base.table_name}.id DESC"
+
+        include module_to_include
+      end        
     end
 
     module WithoutPublishedUntilField
