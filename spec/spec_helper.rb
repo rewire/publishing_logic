@@ -35,7 +35,7 @@ Spec::Example::ExampleGroupFactory.default(ActiveSupport::TestCase)
 require 'publishing_logic'
 
 require 'logger'
-ActiveRecord::Base.logger = Logger.new(File.join(File.dirname(__FILE__), "test.log"))
+ActiveRecord::Base.logger = Logger.new("test.log")
 
 # Time zone setup Publishing Logic assumes that you've properly set up your timezones.
 Time.zone_default = Time.send(:get_zone, 'UTC')
