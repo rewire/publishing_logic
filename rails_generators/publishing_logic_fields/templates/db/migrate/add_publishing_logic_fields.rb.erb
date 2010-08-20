@@ -2,18 +2,17 @@
 
 class <%= migration_name %> < ActiveRecord::Migration
   def self.up
-    add_column :<%= table_name %>, :publishing_enabled, :boolean
-    add_column :<%= table_name %>, :published_at, :datetime
-    add_column :<%= table_name %>, :published_until, :datetime
-
-    add_index :<%= table_name %>, [:published_at, :publishing_enabled, :published_until], :name => :index_<%= table_name %>_on_publishing_logic_fields
+    change_table :<%= table_name %> do |t|
+      t.boolean :publishing_enabled
+      t.datetime :published_at<% unless no_published_until %>, :published_until<% end %>
+      t.index [:published_at, :publishing_enabled<% unless no_published_until %>, :published_until<% end %>], :name => 'index_<%= table_name %>_on_publishing_logic_fields'
+    end
   end
 
   def self.down
-    remove_column :<%= table_name %>, :publishing_enabled
-    remove_column :<%= table_name %>, :published_at
-    remove_column :<%= table_name %>, :published_until
-
-    remove_index :<%= table_name %>, :name => :index_<%= table_name %>_on_publishing_logic_fields
+    change_table :<%= table_name %> do |t|
+      t.remove :publishing_enabled, :published_at<% unless no_published_until %>, :published_until<% end %>
+      t.remove_index :name => 'index_<%= table_name %>_on_publishing_logic_fields'
+    end
   end
 end

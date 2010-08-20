@@ -2,10 +2,10 @@
   <%%= form.label :published_at %><br />
   <%%= form.datetime_select :published_at %>
 </p>
-<p>
+<% unless no_published_until %><p>
   <%%= form.label :published_until %><br />
   <%%= form.datetime_select :published_until %>
-</p>
+</p><% end %>
 <p>
   <%%= form.label :publishing_enabled %>
   <%%= form.check_box :publishing_enabled %>
