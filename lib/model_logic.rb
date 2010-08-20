@@ -10,10 +10,10 @@ module PublishingLogic
     def self.included(base)
       base.extend(ClassMethods)
       base.instance_eval do
-        named_scope :published, lambda {{ :conditions => ["#{base.table_name}.publishing_enabled = true AND \
+        named_scope :published, lambda {{ :conditions => ["#{base.table_name}.publishing_enabled = ? AND \
                                           (#{base.table_name}.published_until is null or #{base.table_name}.published_until > ?) AND \
                                           (#{base.table_name}.published_at is null or #{base.table_name}.published_at < ?)",
-                                          Time.now.utc, Time.now.utc] }} do
+                                          true, Time.now.utc, Time.now.utc] }} do
 
           # TODO Not using table name with the following methods so in danger of getting ambiguous column names
           def newest
