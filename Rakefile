@@ -12,6 +12,12 @@ begin
     gem.authors = ["Unboxed Consulting"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     gem.add_development_dependency "cucumber", ">= 0"
+    gem.add_development_dependency 'rspec-rails', ">= 1.3.0"
+    gem.add_development_dependency 'factory_girl', ">= 1.2.0"
+    gem.add_development_dependency 'activesupport', ">= 2.3.0"
+    gem.add_development_dependency 'activerecord', ">= 2.3.0"
+    gem.add_development_dependency 'database_cleaner', ">= 0.5.0"
+    
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
