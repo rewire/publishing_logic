@@ -46,6 +46,12 @@ shared_examples_for 'a model with publish logic' do
                                                                      @object2,
                                                                      @object1].map(&:id)
       end
+
+      it 'should have deprecated by_date_oldest_first' do
+        assert_deprecated do
+          @class.by_date_oldest_first
+        end
+      end
     end
 
     describe "by publication date newest first" do
@@ -68,6 +74,12 @@ shared_examples_for 'a model with publish logic' do
                                                                      @object2b,
                                                                      @object2,
                                                                      @object3].map(&:id)
+      end
+
+      it 'should have deprecated by_date_newest_first' do
+        assert_deprecated do
+          @class.by_date_newest_first
+        end
       end
     end
 

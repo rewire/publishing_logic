@@ -16,7 +16,19 @@ module PublishingLogic
         named_scope :by_publication_date_newest_first, :order => "#{base.table_name}.published_at DESC, #{base.table_name}.created_at DESC, #{base.table_name}.id DESC"
 
         include module_to_include
-      end        
+
+        class << self
+          def by_date_oldest_first
+            ::ActiveSupport::Deprecation.warn("by_date_oldest_first is deprecated and will be removed in the next version of this gem (use by_publication_date_oldest_first instead, it's more intention revealing).", caller)
+            by_publication_date_oldest_first
+          end
+
+          def by_date_newest_first
+            ::ActiveSupport::Deprecation.warn("by_date_newest_first is deprecated and will be removed in the next version of this gem (use by_publication_date_newest_first instead, it's more intention revealing).", caller)
+            by_publication_date_newest_first
+          end
+        end
+      end
     end
 
     module WithoutPublishedUntilField
