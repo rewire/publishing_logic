@@ -4,12 +4,12 @@ Publishing logic for ActiveRecord models
 * Generates a migration with fields required for publishing
   logic. Fields are:
   * publishing_enabled:boolean
-  * publish_from_datetime:datetime
-  * publish_until_datetime:datetime
+  * published_at:datetime
+  * published_until:datetime (optional)
 * Defines logic on models that include PublishingLogic::ModelLogic
   * published named scope
   * published? method
-  * ordering by publish_from_date
+  * ordering by published_at
 
 The source for this gem can be found on http://github.com/unboxed/publishing_logic
 
