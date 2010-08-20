@@ -20,3 +20,5 @@ pkg
 
 ## PROJECT::SPECIFIC
 publishing_logic.gemspec
+spec/support/test_publishing_logic.db
+spec/test.log
