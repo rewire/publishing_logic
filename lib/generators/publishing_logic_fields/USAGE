@@ -1,2 +1,1 @@
-Real usage: ./script/generate publishing_logic_fields model_name [options]
-Note: The generator will fail if the model does not  exist
+NOTE: The generator will fail if the model does not exist

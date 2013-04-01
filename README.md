@@ -8,14 +8,15 @@ To install add the following to your gemfile:
 
 After installing the gem add the publishing logic fields to your model by running:
 
-  bundle exec rails g publishing_logic_fields
+  bundle exec rails generate publishing_logic_fields NAME [options]
 
+To see full documentation of generator options run
 
+  bundle exec rails generate publishing_logic_fields
 
 ### Publishing logic for ActiveRecord models
 
-* Generates a migration with fields required for publishing
-  logic. Fields are:
+* Generates a migration with fields required for publishing logic. Fields are:
   * publishing_enabled:boolean
   * published_at:datetime
   * published_until:datetime (optional)
