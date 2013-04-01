@@ -15,7 +15,7 @@ class PublishingLogicFieldsGenerator < Rails::Generators::NamedBase
 
   def create_view_file
     raise_if_class_does_not_exists
-    unless skip_admin_form?
+    if options[:admin_form]
       template  'app/views/publishing_logic_fields.html.erb',
                 "app/views/admin/#{table_name}/_publishing_logic_fields.html.erb"
     end
@@ -26,20 +26,12 @@ class PublishingLogicFieldsGenerator < Rails::Generators::NamedBase
     class_name.classify.constantize
   end
 
-  def skip_admin_form?
-    @skip_admin_form ||= !options[:admin_form]
-  end
-
   def migration_file_name
     "add_publishing_logic_fields_to_#{file_path.gsub(/\//, '_').pluralize}"
   end
 
   def migration_name
     "AddPublishingLogicFieldsTo#{class_name.pluralize.gsub(/::/, '')}"
-  end
-
-  def use_published_until_field
-    @use_published_until_field ||= options[:published_until_field]
   end
 
   def table_name
