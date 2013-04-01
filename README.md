@@ -8,11 +8,11 @@ To install add the following to your gemfile:
 
 After installing the gem add the publishing logic fields to your model by running:
 
-  bundle exec rails generate publishing_logic:fields NAME [options]
+  bundle exec rails generate publishing_logic_fields NAME [options]
 
 To see full documentation of generator options run
 
-  bundle exec rails generate publishing_logic_fields
+  bundle exec rails generate publishing_logic:fields
 
 ### Publishing logic for ActiveRecord models
 
