@@ -6,6 +6,9 @@ class PublishingLogicFieldsGenerator < Rails::Generators::NamedBase
 
   class_option :published_until_field,  type: :boolean, default: true,    desc: "Specify if the generator should create a published_until field"
   class_option :admin_form,             type: :boolean, default: true,    desc: "Specify if the generator should create an admin form"
+  class_option :admin_namespace,        type: :string,  default: 'admin', desc: "Specify the namespace for the admin publishing_fields view partial"
+  class_option :shared_template,        type: :boolean, default: false,   desc: "(For multiple Publishable models) Specify if the admin publishing_fields view partial should go into the shared directory"
+
 
   def create_migration_file
     raise_if_class_does_not_exists
@@ -17,7 +20,7 @@ class PublishingLogicFieldsGenerator < Rails::Generators::NamedBase
     raise_if_class_does_not_exists
     if options[:admin_form]
       template  'app/views/publishing_logic_fields.html.erb',
-                "app/views/admin/#{table_name}/_publishing_logic_fields.html.erb"
+                "app/views/#{admin_namespace}#{template_dir}/_publishing_logic_fields.html.erb"
     end
   end
 
@@ -34,8 +37,12 @@ class PublishingLogicFieldsGenerator < Rails::Generators::NamedBase
     "AddPublishingLogicFieldsTo#{class_name.pluralize.gsub(/::/, '')}"
   end
 
-  def table_name
-    class_name.underscore.camelize.tableize
+  def admin_namespace
+    options[:admin_namespace].blank? ? '/' : "#{options[:admin_namespace]}/"
+  end
+
+  def template_dir
+    options[:shared_template] ? 'shared' : table_name
   end
 
   protected
