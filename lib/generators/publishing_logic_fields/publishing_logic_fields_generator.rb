@@ -1,34 +1,59 @@
-class PublishingLogicFieldsGenerator < Rails::Generator::NamedBase
-  default_options :use_published_until_field => true, :skip_admin_form => false
+class PublishingLogicFieldsGenerator < Rails::Generators::NamedBase
 
-  def initialize(args, options)
-    super(args, options)
+  include Rails::Generators::Migration
+
+  source_root File.expand_path('../templates', __FILE__)
+
+  class_option :published_until_field,  type: :boolean, default: true,    desc: "Specify if the generator should create a published_until field"
+  class_option :admin_form,             type: :boolean, default: true,    desc: "Specify if the generator should create an admin form"
+
+  def create_migration_file
+    raise_if_class_does_not_exists
+    migration_template  'db/migrate/add_publishing_logic_fields.rb.erb',
+                        "db/migrate/#{migration_file_name}.rb"
   end
 
-  def manifest
-    record do |m|
-      class_name.camelize.constantize # Raise an error if model does not yet exist
-      m.migration_template 'db/migrate/add_publishing_logic_fields.rb.erb', 'db/migrate', :assigns => {
-        :migration_name => "AddPublishingLogicFieldsTo#{class_name.pluralize.gsub(/::/, '')}",
-        :use_published_until_field => options[:use_published_until_field]
-      }, :migration_file_name => "add_publishing_logic_fields_to_#{file_path.gsub(/\//, '_').pluralize}"
-      unless options[:skip_admin_form]
-        m.template 'app/views/publishing_logic_fields.html.erb',
-                   File.join('app', 'views', 'admin', plural_name, "_publishing_logic_fields.html.erb"),
-                   :assigns => {
-                     :use_published_until_field => options[:use_published_until_field]
-                   }
-      end
+  def create_view_file
+    raise_if_class_does_not_exists
+    unless skip_admin_form?
+      template  'app/views/publishing_logic_fields.html.erb',
+                "app/views/admin/#{table_name}/_publishing_logic_fields.html.erb"
     end
+  end
+
+  private
+  def raise_if_class_does_not_exists
+    class_name.classify.constantize
+  end
+
+  def skip_admin_form?
+    @skip_admin_form ||= !options[:admin_form]
+  end
+
+  def migration_file_name
+    "add_publishing_logic_fields_to_#{file_path.gsub(/\//, '_').pluralize}"
+  end
+
+  def migration_name
+    "AddPublishingLogicFieldsTo#{class_name.pluralize.gsub(/::/, '')}"
+  end
+
+  def use_published_until_field
+    @use_published_until_field ||= options[:published_until_field]
+  end
+
+  def table_name
+    class_name.underscore.camelize.tableize
   end
 
   protected
-    def add_options!(opt)
-      opt.separator ''
-      opt.separator 'Options:'
-      opt.on("--no-published-until",
-             "Don't add the published_until field to this model") { |v| options[:use_published_until_field] = false }
-      opt.on("--skip-admin-form",
-             "Don't generate the admin form partial for this model") { |v| options[:skip_admin_form] = true }
+
+  def self.next_migration_number(path)
+    unless @prev_migration_nr
+      @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
+    else
+      @prev_migration_nr += 1
     end
+    @prev_migration_nr.to_s
+  end
 end
