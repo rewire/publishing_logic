@@ -24,8 +24,7 @@ module PublishingLogic
           template  'app/views/publishing_logic_fields.html.erb',
                     "app/views/#{admin_namespace}#{template_dir}/_publishing_logic_fields.html.erb"
 
-          puts  "You will need to add the following line to you #{class_name} form view:\n" +
-                "   <%= render: '#{template_dir + '/' if options[:shared_templte]}publishing_logic_fields' form: form %>"
+          puts completed_message
         end
       end
 
@@ -57,6 +56,16 @@ module PublishingLogic
           @prev_migration_nr += 1
         end
         @prev_migration_nr.to_s
+      end
+
+      def completed_message
+        "\n      ===============================================================\n\n" +
+        "      You will need to add the following line to your #{class_name} form view:\n\n" +
+        "          <%= render: '#{template_dir + '/' if options[:shared_templte]}publishing_logic_fields' form: form %>\n\n" +
+        "      and the following to your #{class_name} model:\n\n" +
+        "          include PublishingLogic::ModelLogic\n\n" +
+        "      and run your migrations:\n\n" +
+        "          bundle exec rake db:migrate\n\n\n"
       end
     end
   end
