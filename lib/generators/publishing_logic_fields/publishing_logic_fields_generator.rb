@@ -2,7 +2,7 @@ class PublishingLogicFieldsGenerator < Rails::Generators::NamedBase
 
   include Rails::Generators::Migration
 
-  source_root File.expand_path('../templates', __FILE__)
+  source_root File.expand_path('./templates', __FILE__)
 
   class_option :published_until_field,  type: :boolean, default: true,    desc: "Specify if the generator should create a published_until field"
   class_option :admin_form,             type: :boolean, default: true,    desc: "Specify if the generator should create an admin form"
