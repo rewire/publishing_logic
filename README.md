@@ -1,5 +1,5 @@
 # publishing_logic
-Requires: Ruby > v 1.9 and Rails > v 3
+Requires: Ruby >= v 1.9 and Rails >= v 3
 
 ### Installation
 
