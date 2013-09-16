@@ -13,12 +13,12 @@ module PublishingLogic
         # ordering of objects, ordering by newest and oldest should result in arrays that are
         # the inverse of the other.
          scope :by_publication_date_oldest_first, lambda {
-+          order("#{base.table_name}.published_at ASC, #{base.table_name}.created_at ASC, #{base.table_name}.id ASC")
-+        }
-+
-+        scope :by_publication_date_newest_first, lambda {
-+          order("#{base.table_name}.published_at DESC, #{base.table_name}.created_at DESC, #{base.table_name}.id DESC")
-+        }
+          order("#{base.table_name}.published_at ASC, #{base.table_name}.created_at ASC, #{base.table_name}.id ASC")
+        }
+
+        scope :by_publication_date_newest_first, lambda {
+          order("#{base.table_name}.published_at DESC, #{base.table_name}.created_at DESC, #{base.table_name}.id DESC")
+        }
 
         include module_to_include
       end
