@@ -51,6 +51,8 @@ module PublishingLogic
     module WithPublishedUntilField
       def self.included(base)
         base.class_eval do
+          validate :published_until_is_not_before_published_at
+
           scope :published, lambda { where("#{base.table_name}.publishing_enabled = ? AND \
                                             (#{base.table_name}.published_until IS NULL or #{base.table_name}.published_until > ?) AND \
                                             (#{base.table_name}.published_at IS NULL or #{base.table_name}.published_at < ?)",
@@ -68,6 +70,11 @@ module PublishingLogic
             return false if published_at && Time.now < published_at
             return false if published_until && Time.now > published_until
             publishing_enabled?
+          end
+
+          private
+          def published_until_is_not_before_published_at
+            errors.add(:published_until, "should not be before publishing at") if published_until.present? && published_at.present? && published_until < published_at
           end
         end
       end
