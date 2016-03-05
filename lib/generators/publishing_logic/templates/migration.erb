@@ -1,0 +1,10 @@
+class AddPublishingLogicFieldsTo<%= table_name.camelize %> < ActiveRecord::Migration
+  def change
+    change_table :<%= table_name %> do |<%= table_name %>|
+      <%= table_name %>.boolean :publishing_enabled, default: false
+      <%= table_name %>.datetime :published_at
+      <%= table_name %>.datetime :published_until
+      <%= table_name %>.index [:published_at, :publishing_enabled, :published_until], name: 'index_<%= table_name %>_on_publishing_logic_fields'
+    end
+  end
+end
