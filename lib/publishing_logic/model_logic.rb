@@ -77,11 +77,11 @@ module PublishingLogic
 
         private
           def published_until_is_not_before_published_at
-            errors.add(:published_until, 'must be before publishing at') if published_until.present? && published_at.present? && published_until < published_at
+            errors.add(:published_until, :must_be_before_publishing_at) if published_until.present? && published_at.present? && published_until < published_at
           end
 
           def publishing_until_in_future
-            errors.add(:published_until, 'must be in the future') if published_until && !published_until.future?
+            errors.add(:published_until, :must_be_in_the_future) if published_until && !published_until.future?
           end
         end
       end
