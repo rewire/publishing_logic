@@ -1,6 +1,5 @@
 module PublishingLogic
   module ModelLogic
-
     def self.included(base)
       module_to_include = if base.column_names.include?('published_until')
                             WithPublishedUntilField
@@ -32,11 +31,11 @@ module PublishingLogic
                   (#{base.table_name}.published_at IS NULL or #{base.table_name}.published_at < ?)",
                   true, Time.now.utc) } do
             def newest
-              find(:first, :order => "#{table_name}.published_at DESC")
+              order("#{table_name}.published_at DESC").first
             end
 
             def oldest
-              find(:last, :order => "#{table_name}.published_at DESC")
+              order("#{table_name}.published_at DESC").last
             end
           end
 
@@ -56,11 +55,11 @@ module PublishingLogic
                                             (#{base.table_name}.published_at IS NULL or #{base.table_name}.published_at < ?)",
                                             true, Time.now.utc, Time.now.utc) } do
             def newest
-              find(:first, :order => "#{table_name}.published_at DESC")
+              order("#{table_name}.published_at DESC").first
             end
 
             def oldest
-              find(:last, :order => "#{table_name}.published_at DESC")
+              order("#{table_name}.published_at DESC").last
             end
           end
 
