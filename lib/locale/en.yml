@@ -1,0 +1,9 @@
+en:
+  attributes:
+    publishing_enabled: 'Publishing enabled?'
+    published_at: 'Published at'
+    published_unttil: 'Published until'
+  errors:
+    messages:
+      must_be_before_publishing_at: 'must be before publishing at'
+      must_be_in_the_future: 'must be in the future'

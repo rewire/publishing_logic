@@ -1,0 +1,9 @@
+hu:
+  attributes:
+    publishing_enabled: 'Publikus?'
+    published_at: Közzététel kezdete
+    published_until: Közzététel vége
+  errors:
+    messages:
+      must_be_before_publishing_at: 'a közzététel kezdete után kell legyen'
+      must_be_in_the_future: 'nem lehet múltbéli időpont'
